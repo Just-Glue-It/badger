@@ -1,0 +1,28 @@
+nginx:
+  build: ./nginx
+  ports:
+    - 80:80
+  volumes:
+    - /www/static
+  links:
+    - postgrest:postgrest
+
+postgrest:
+  build: ./
+  ports:
+    - 8000:8000
+  links:
+    - pg:postgres
+  environment:
+    POSTGRES_DB_NAME: docker
+
+pg:
+  image: postgres
+  restart: always
+  volumes:
+    - "./postgres/schema.sql:/docker-entrypoint-initdb.d/setup.sql"
+  ports:
+    - 5432:5432
+  environment:
+    POSTGRES_PASSWORD: docker
+    POSTGRES_USER: docker

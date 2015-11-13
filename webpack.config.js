@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
   },
   output: {
     filename: './dist/app.js',
@@ -17,10 +17,11 @@ module.exports = {
       loaders: ['babel']
     }, {
       test: /\.json$/,
+      // exclude: /build|lib|node_modules/,
       loaders: ['json']
     }],
     preLoaders: [
-      { test: /\.js$/, loader: 'eslint', exclude: /build|lib|node_modules/ }
+      { test: /\.js$/, loader: 'eslint', exclude: /build|lib|node_modules/ },
     ]
   },
   plugins: [
@@ -30,5 +31,5 @@ module.exports = {
   ],
   eslint: {
     configFile: '.eslintrc'
-  }
+  },
 };

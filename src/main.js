@@ -1,7 +1,12 @@
-import Cycle from '@cycle/core';
-import {h, makeDOMDriver} from '@cycle/dom';
+const Cycle = require('@cycle/core');
+const CycleDOM = require('@cycle/dom');
+const h = CycleDOM.h;
+const makeDOMDriver = CycleDOM.makeDOMDriver;
 
-function main (responses) {
+// import Cycle from '@cycle/core';
+// import {makeDOMDriver, h} from '@cycle/dom';
+
+function main(responses) {
   const requests = {
     DOM: responses.DOM.select('.field').events('input')
       .map(ev => ev.target.value)
@@ -18,5 +23,5 @@ function main (responses) {
 }
 
 Cycle.run(main, {
-  DOM: makeDOMDriver('#app-container')
+  DOM: makeDOMDriver('#app')
 });

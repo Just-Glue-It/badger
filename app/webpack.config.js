@@ -1,3 +1,4 @@
+var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
@@ -8,21 +9,20 @@ module.exports = {
   output: {
     filename: './dist/app.js',
     publicPath: '/',
-    path: __dirname
+    path: __dirname,
+    include: path.join(__dirname, 'src')
   },
   module: {
     loaders: [{
       test: /\.js$/,
-      exclude: /build|lib|node_modules/,
-      loaders: ['babel']
-    }, {
-      test: /\.json$/,
-      // exclude: /build|lib|node_modules/,
-      loaders: ['json']
+      loader: 'babel-loader',
+      include: /dist|build|lib|node_modules/,
     }],
-    preLoaders: [
-      { test: /\.js$/, loader: 'eslint', exclude: /build|lib|node_modules/ },
-    ]
+    preLoaders: [{
+      test: /\.js$/,
+      loader: 'eslint',
+      exclude: /build|lib|node_modules/
+    }]
   },
   plugins: [
     new webpack.DefinePlugin({

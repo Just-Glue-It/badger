@@ -1,10 +1,5 @@
-const Cycle = require('@cycle/core');
-const CycleDOM = require('@cycle/dom');
-const h = CycleDOM.h;
-const makeDOMDriver = CycleDOM.makeDOMDriver;
-
-// import Cycle from '@cycle/core';
-// import {makeDOMDriver, h} from '@cycle/dom';
+import Cycle from '@cycle/core';
+import {makeDOMDriver, h} from '@cycle/dom';
 
 function main(responses) {
   const requests = {
@@ -13,7 +8,7 @@ function main(responses) {
       .startWith('')
       .map(name =>
         h('div', [
-          h('label', 'Name:'),
+          h('label', 'Stuff:'),
           h('input.field', {attributes: {type: 'text'}}),
           h('h1', 'Hello ' + name)
         ])

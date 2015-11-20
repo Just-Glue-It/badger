@@ -21,9 +21,11 @@ if ! hash git 2>/dev/null; then
     sudo apt-get install git
 fi
 
+# TODO: save previous code to a backup so that we can revert back if the build fails
 if [ -e code ]; then
     sudo rm -rf code
 fi
+
 git clone https://github.com/Just-Glue-It/STL.git code
 
 cd code

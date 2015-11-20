@@ -28,7 +28,7 @@ fi
 
 git clone https://github.com/Just-Glue-It/STL.git code
 
-cd code
+cd 'code/backend'
 docker-compose build
 docker-compose kill
 docker-compose up -d

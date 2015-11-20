@@ -15,12 +15,12 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loader: 'babel-loader',
-      include: /dist|build|lib|node_modules/,
+      loaders: ['babel'],
+      exclude: /dist|build|lib|node_modules/,
     }],
     preLoaders: [{
       test: /\.js$/,
-      loader: 'eslint',
+      loaders: ['eslint'],
       exclude: /build|lib|node_modules/
     }]
   },

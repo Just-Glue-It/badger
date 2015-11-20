@@ -10,17 +10,16 @@ module.exports = {
     filename: './dist/app.js',
     publicPath: '/',
     path: __dirname,
-    include: path.join(__dirname, 'src')
   },
   module: {
     loaders: [{
       test: /\.js$/,
-      loader: 'babel-loader',
-      include: /dist|build|lib|node_modules/,
+      loaders: ['babel'],
+      exclude: /build|lib|node_modules/,
     }],
     preLoaders: [{
       test: /\.js$/,
-      loader: 'eslint',
+      loaders: ['eslint'],
       exclude: /build|lib|node_modules/
     }]
   },

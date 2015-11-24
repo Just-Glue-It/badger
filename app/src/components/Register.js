@@ -1,4 +1,4 @@
-import {Rx} from '@cycle/core';
+import Rx from 'rx';
 import {h} from '@cycle/dom';
 import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
@@ -13,8 +13,8 @@ function actions(constant, data) {
   switch(constant) {
   case Constants.ID_CHANGED:
     return {
-        action: constant,
-        id: data.id
+      action: constant,
+      id: data.id
     };
   case Constants.PASS_CHANGED:
     return {
@@ -26,33 +26,33 @@ function actions(constant, data) {
       action: constant
     };
   default:
-    console.err("Bad Constant", constant, data);
+    console.error('Bad Constant', constant, data);
   }
 };
 
 const initialModel = Immutable.Map({
-  id: "",
-  pass: ""
+  id: '',
+  pass: ''
 });
 
-function update(action, model) {
+function update(model, action) {
   switch(action.action) {
   case Constants.ID_CHANGED:
     return model.set('id', action.id);
   case Constants.PASS_CHANGED:
     return model.set('pass', action.pass);
   case Constants.REGISTER_BTN:
-    return model.merge({id: "", pass: ""});
+    return model.merge({id: '', pass: ''});
   default:
-    console.err("Bad Constant", action);
+    console.error('Bad Constant', action);
   }
 }
 
 function view(model) {
   return h('div',[
-    h('input.id', model.id),
-    h('input.pass', {type: 'password'}, model.pass),
-    h('button.register', "Register")
+    h('input.id', {value: model.get('id')}),
+    h('input.pass', {type: 'password', value: model.get('pass')}),
+    h('button.register', 'Register')
   ]);
 }
 
@@ -71,15 +71,10 @@ function intent(DOM) {
           .select('.pass')
           .events('input')
           .map( (ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
+  console.log(Rx);
   return Rx.Observable.merge(
     register$, idChange$, passChange$
   );
 }
 
-function main(DOM) {
-  const action$ = intent(DOM);
-  const model$ = action$.scan(update, initialModel);
-  return {
-    DOM: model$.map(view)
-  };
-}
+export default {intent, initialModel, update, view};

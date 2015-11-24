@@ -26,7 +26,7 @@ function actions(constant, data) {
       action: constant
     };
   default:
-    console.err('Bad Constant', constant, data);
+    console.error('Bad Constant', constant, data);
   }
 }
 
@@ -35,7 +35,7 @@ const initialModel = Immutable.Map({
   pass: ''
 });
 
-function update(action, model) {
+function update(model, action) {
   switch (action.action) {
   case Constants.ID_CHANGED:
     return model.set('id', action.id);
@@ -44,7 +44,7 @@ function update(action, model) {
   case Constants.LOGIN_BTN:
     return model.merge({id: '', pass: ''});
   default:
-    console.err('Bad Constant', constant, data);
+    console.error('Bad Constant', constant, data);
   }
 }
 
@@ -75,12 +75,4 @@ function view(model) {
     }, model.pass),
     h('button.login', 'Login')
   ]);
-}
-
-function main(DOM) {
-  const action$ = intent(DOM);
-  const model$ = action$.scan(update, initialModel());
-  return {
-    DOM: model$.map(view)
-  };
 }

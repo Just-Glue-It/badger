@@ -2,10 +2,12 @@ import {run} from '@cycle/core';
 import Rx from 'rx';
 import {h, makeDOMDriver} from '@cycle/dom';
 import Register from './components/Register';
+import Login from './components/Login';
 import KeyMirror from 'keymirror';
 import Immutable from 'immutable';
 import routes from './routes';
 const Constants = KeyMirror({
+  LOGIN: null,
   REGISTER: null,
   NO_OP: null,
   CHANGE_ROUTE: null
@@ -27,12 +29,18 @@ function action(constant, data) {
       action: constant,
       route: data.route
     };
+  case Constants.LOGIN:
+    return {
+      action: constant,
+      childAction: data.action
+    };
   default:
     console.error('Invalid Constant', constant, data);
-  } 
+  }
 }
 
 const initialModel = Immutable.Map({
+  login: Login.initialModel,
   register: Register.initialModel
 });
 
@@ -47,29 +55,44 @@ function update(model, action) {
     );
   case Constants.CHANGE_ROUTE:
     return initialModel.set('route', action.route);
+  case Constants.LOGIN:
+    return initialModel.set(
+      'login',
+      Login.update(initialModel, action.childAction)
+    );
   default:
     console.error('Invalid Constant', action);
   }
 }
 
 function view(model) {
-  console.log('in main/view');
-  return Register.view(model.get('register'));
+  console.log('in main/view');                            // TODO
+  // return Register.view(model.get('register'));
+  return Login.view(model.get('login'));
 }
 
+<<<<<<< HEAD
 function intent(DOM, events) {
   const routeChange$ = events
           .route
           .map((route) =>
                action(Constants.CHANGE_ROUTE, { route: route }));
   
-  const registerAction$ = Register
+  const registerAction$ = Register                    // TODO
           .intent(DOM)
           .map((register_action) =>
                action(Constants.REGISTER, {action: register_action}));
-  
+
+  const loginAction$ = Login
+    .intent(DOM)
+    .map((login_action) =>
+      action(Constants.LOGIN, {action: login_action}));
+
+  // return Rx.Observable.merge(
+  //   registerAction$
+  // ).startWith(action(Constants.NO_OP));
   return Rx.Observable.merge(
-    registerAction$, routeChange$
+    registerAction$, routeChange$, loginAction$
   ).startWith(action(Constants.NO_OP));
 }
 

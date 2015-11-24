@@ -1,9 +1,9 @@
 import {h} from '@cycle/dom';
 import Immutable from 'immutable';
-import keyMirror from 'keymirror';
-import {Rx} from '@cycle/core';
+import KeyMirror from 'keymirror';
+import Rx from 'rx';
 
-const Constants = keyMirror({
+const Constants = KeyMirror({
   ID_CHANGED: null,
   PASS_CHANGED: null,
   LOGIN_BTN: null
@@ -48,31 +48,39 @@ function update(model, action) {
   }
 }
 
-function intent() {
+function intent(DOM) {
   const login$ = DOM
     .select('.login')
     .events('click')
     .map(() => actions(Constants.LOGIN_BTN));
-  const idChanged$ = DOM
+  const idChange$ = DOM
     .select('.id')
     .events('input')
     .map((ev) => actions(Constants.ID_CHANGED, {id: ev.target.value}));
-  const passChanged$ = DOM
+  const passChange$ = DOM
     .select('.pass')
     .events('input')
     .map((ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
 
-  return Rx.Observable.merge(login$, idChanged$, passChanged$);
+  return Rx.Observable.merge(
+    login$, idChange$, passChange$
+  );
 }
 
 function view(model) {
   return h('div', [
     h('input.id', {
-      type: 'text'
-    }, model.id),
+      type: 'text',
+      value: model.get('id')
+    }),
+    h('br'),
     h('input.pass', {
-      type: 'password'
-    }, model.pass),
+      type: 'password',
+      value: model.get('pass')
+    }),
+    h('br'),
     h('button.login', 'Login')
   ]);
 }
+
+export default {intent, initialModel, update, view};

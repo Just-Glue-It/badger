@@ -28,13 +28,13 @@
     "eslint-loader": "^1.1.1",
     "eslint-plugin-babel": "^2.1.1",
     "eslint-plugin-react": "^3.8.0",
-    "path": "^0.12.7",
     "webpack": "^1.12.4",
     "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
     "@cycle/core": "^5.0.1",
     "@cycle/dom": "^7.1.1",
-    "rx": "^4.0.6"
+    "rx": "^4.0.6",
+    "keymirror": "latest"
   }
 }

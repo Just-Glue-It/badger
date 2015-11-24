@@ -73,10 +73,12 @@ function view(model) {
       type: 'text',
       value: model.get('id')
     }),
+    h('br'),
     h('input.pass', {
       type: 'password',
       value: model.get('pass')
     }),
+    h('br'),
     h('button.login', 'Login')
   ]);
 }

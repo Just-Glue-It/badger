@@ -61,12 +61,12 @@ function intent(DOM) {
           .select('.register')
           .events('click')
           .map( () => actions(Constants.REGISTER_BTN) );
-  
+
   const idChange$ = DOM
           .select('.id')
           .events('input')
           .map( (ev) => actions(Constants.ID_CHANGED, {id: ev.target.value}));
-  
+
   const passChange$ = DOM
           .select('.pass')
           .events('input')

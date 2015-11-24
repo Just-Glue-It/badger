@@ -51,5 +51,6 @@
     "babel/new-cap": 1,
     "babel/object-curly-spacing": 1,
     "babel/object-shorthand": 1,
+    "babel/new-cap": [ 0 ]
   }
 }

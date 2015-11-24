@@ -1,7 +1,7 @@
 {
-  "name": "stl",
+  "name": "badger",
   "version": "0.0.1",
-  "description": "Stochastic Time Log - tracking your data stochastically",
+  "description": "badger - tracking your data stochastically",
   "main": "./src/main.js",
   "scripts": {
     "start": "NODE_ENV=development node server.js",
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Just-Glue-It/STL.git"
+    "url": "git+https://github.com/Just-Glue-It/badger.git"
   },
   "author": "davidrusu & kingscott",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Just-Glue-It/STL/issues"
+    "url": "https://github.com/Just-Glue-It/badger/issues"
   },
   "homepage": "https://github.com/Just-Glue-It/STL#readme",
   "devDependencies": {

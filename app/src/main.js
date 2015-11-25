@@ -71,13 +71,12 @@ function view(model) {
   return Login.view(model.get('login'));
 }
 
-<<<<<<< HEAD
 function intent(DOM, events) {
   const routeChange$ = events
           .route
           .map((route) =>
-               action(Constants.CHANGE_ROUTE, { route: route }));
-  
+               action(Constants.CHANGE_ROUTE, {route: route}));
+
   const registerAction$ = Register                    // TODO
           .intent(DOM)
           .map((register_action) =>
@@ -88,9 +87,6 @@ function intent(DOM, events) {
     .map((login_action) =>
       action(Constants.LOGIN, {action: login_action}));
 
-  // return Rx.Observable.merge(
-  //   registerAction$
-  // ).startWith(action(Constants.NO_OP));
   return Rx.Observable.merge(
     registerAction$, routeChange$, loginAction$
   ).startWith(action(Constants.NO_OP));

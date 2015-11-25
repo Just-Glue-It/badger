@@ -27,7 +27,6 @@
     "eslint-config-airbnb": "^1.0.0",
     "eslint-loader": "^1.1.1",
     "eslint-plugin-babel": "^2.1.1",
-    "eslint-plugin-react": "^3.8.0",
     "webpack": "^1.12.4",
     "webpack-dev-server": "^1.12.1"
   },

@@ -41,7 +41,7 @@ function actions(constant, data) {
 const initialModel = Immutable.Map({
   id: '',
   pass: '',
-  HTTP: Rx.Observable.never()
+  HTTP: Rx.Observable.empty()
 });
 
 function update(model, action) {
@@ -88,7 +88,7 @@ function intent(DOM, HTTP) {
           .filter(req$ => req$.request.url === BADGER_LOGIN_API)
           .mergeAll()
           .map(res => res.body)
-          .startsWith('Sending request')
+          .startWith('Sending request')
           .map(body => localStorage.setItem('sessionID', body.token));
 
   return Rx.Observable.merge(

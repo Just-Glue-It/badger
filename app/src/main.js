@@ -44,7 +44,7 @@ function action(constant, data) {
 const initialModel = Immutable.Map({
   login: Login.initialModel,
   register: Register.initialModel,
-  HTTP: Rx.Observable.merge(Login.initialModel.HTTP, Register.initialModel.HTTP)
+  HTTP: Rx.Observable.merge(Login.initialModel.HTTP)
 });
 
 function update(model, action) {
@@ -111,10 +111,12 @@ function main({DOM, HTTP}) {
   };
 }
 
-run(main, {
+const drivers = {
   DOM: makeDOMDriver('.app'),
   HTTP: makeHTTPDriver(),
   // events: {
   //   route: Rx.Observable.just(routes.LOGIN)
   // }
-});
+};
+
+run(main, drivers);

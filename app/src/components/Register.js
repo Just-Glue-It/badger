@@ -71,7 +71,7 @@ function intent(DOM) {
           .select('.pass')
           .events('input')
           .map( (ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
-  console.log(Rx);
+          
   return Rx.Observable.merge(
     register$, idChange$, passChange$
   );

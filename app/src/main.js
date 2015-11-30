@@ -1,11 +1,13 @@
 import {run} from '@cycle/core';
 import Rx from 'rx';
 import {h, makeDOMDriver} from '@cycle/dom';
+import {makeHTTPDriver} from '@cycle/http';
 import Register from './components/Register';
 import Login from './components/Login';
 import KeyMirror from 'keymirror';
 import Immutable from 'immutable';
 import routes from './routes';
+
 const Constants = KeyMirror({
   LOGIN: null,
   REGISTER: null,
@@ -41,28 +43,35 @@ function action(constant, data) {
 
 const initialModel = Immutable.Map({
   login: Login.initialModel,
-  register: Register.initialModel
+  register: Register.initialModel,
+  HTTP: Rx.Observable.merge(Login.initialModel.HTTP, Register.initialModel.HTTP)
 });
 
 function update(model, action) {
+  let newModel;
   switch(action.action) {
   case Constants.NO_OP:
-    return model;
+    newModel = model;
   case Constants.REGISTER:
-    return initialModel.set(
+    newModel = initialModel.set(
       'register',
       Register.update(initialModel, action.childAction)
     );
   case Constants.CHANGE_ROUTE:
-    return initialModel.set('route', action.route);
+    newModel = initialModel.set('route', action.route);
   case Constants.LOGIN:
-    return initialModel.set(
+    newModel = initialModel.set(
       'login',
       Login.update(initialModel, action.childAction)
     );
   default:
     console.error('Invalid Constant', action);
   }
+
+  newModel.set(
+    'HTTP',
+    Rx.Observable.merge(Login.initialModel.HTTP, Register.initialModel.HTTP)
+  );
 }
 
 function view(model) {
@@ -71,11 +80,11 @@ function view(model) {
   return Login.view(model.get('login'));
 }
 
-function intent(DOM, events) {
-  const routeChange$ = events
-          .route
-          .map((route) =>
-               action(Constants.CHANGE_ROUTE, {route: route}));
+function intent(DOM, HTTP) {
+  // const routeChange$ = events
+  //         .route
+  //         .map((route) =>
+  //              action(Constants.CHANGE_ROUTE, {route: route}));
 
   const registerAction$ = Register                    // TODO
           .intent(DOM)
@@ -83,27 +92,29 @@ function intent(DOM, events) {
                action(Constants.REGISTER, {action: register_action}));
 
   const loginAction$ = Login
-    .intent(DOM)
+    .intent(DOM, HTTP)
     .map((login_action) =>
       action(Constants.LOGIN, {action: login_action}));
 
   return Rx.Observable.merge(
-    registerAction$, routeChange$, loginAction$
+    registerAction$, loginAction$
   ).startWith(action(Constants.NO_OP));
 }
 
-function main({DOM, events}) {
-  const action$ = intent(DOM, events);
+function main({DOM, HTTP}) {
+  const action$ = intent(DOM, HTTP);
   const model$ = action$.scan(update, initialModel).shareReplay(1);
   const view$ = model$.map(view);
   return {
-    DOM: view$
+    DOM: view$,
+    HTTP: model$.map(m => m.HTTP)
   };
 }
 
 run(main, {
   DOM: makeDOMDriver('.app'),
-  events: {
-    route: Rx.Observable.just(routes.LOGIN)
-  }
+  HTTP: makeHTTPDriver(),
+  // events: {
+  //   route: Rx.Observable.just(routes.LOGIN)
+  // }
 });

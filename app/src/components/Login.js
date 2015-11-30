@@ -41,7 +41,7 @@ function actions(constant, data) {
 const initialModel = Immutable.Map({
   id: '',
   pass: '',
-  HTTP: Rx.Observable.empty()
+  HTTP: Rx.Observable.never()
 });
 
 function update(model, action) {

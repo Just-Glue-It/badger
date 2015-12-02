@@ -2,11 +2,12 @@ import Rx from 'rx';
 import {h} from '@cycle/dom';
 import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
+import Routes from '../routes';
 
 const Constants = KeyMirror({
   ID_CHANGED: null,
   PASS_CHANGED: null,
-  REGISTER_BTN: null
+  REGISTER_BTN: null,
 });
 
 function actions(constant, data) {
@@ -52,11 +53,17 @@ function view(model) {
   return h('div',[
     h('input.id', {value: model.get('id')}),
     h('input.pass', {type: 'password', value: model.get('pass')}),
-    h('button.register', 'Register')
+    h('button.register', 'Register'),
+    h('button.back', 'Back to Login')
   ]);
 }
 
 function intent(DOM) {
+  const back$ = DOM
+	  .select('.back')
+	  .events('click')
+	  .map( () => Routes.LOGIN );
+  
   const register$ = DOM
           .select('.register')
           .events('click')
@@ -72,9 +79,12 @@ function intent(DOM) {
           .events('input')
           .map( (ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
   console.log(Rx);
-  return Rx.Observable.merge(
-    register$, idChange$, passChange$
-  );
+  return {
+    DOM: Rx.Observable.merge(
+      register$, idChange$, passChange$
+    ),
+    route: back$
+  };
 }
 
 export default {intent, initialModel, update, view};

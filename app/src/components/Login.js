@@ -2,6 +2,7 @@ import {h} from '@cycle/dom';
 import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
 import Rx from 'rx';
+import Routes from '../routes';
 
 const Constants = KeyMirror({
   ID_CHANGED: null,
@@ -44,11 +45,11 @@ function update(model, action) {
   case Constants.LOGIN_BTN:
     return model.merge({id: '', pass: ''});
   default:
-    console.error('Bad Constant', constant, data);
+    console.error('Bad Constant', action);
   }
 }
 
-function intent(DOM) {
+function intent(DOM, HTTP) {
   const login$ = DOM
     .select('.login')
     .events('click')
@@ -61,10 +62,17 @@ function intent(DOM) {
     .select('.pass')
     .events('input')
     .map((ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
-
-  return Rx.Observable.merge(
-    login$, idChange$, passChange$
-  );
+  const register$ = DOM
+	  .select('.loginregister')
+	  .events('click')
+	  .map(() => Routes.REGISTER);
+  
+  return {
+    DOM: Rx.Observable.merge(
+      login$, idChange$, passChange$
+    ),
+    route: register$
+  };
 }
 
 function view(model) {
@@ -79,7 +87,8 @@ function view(model) {
       value: model.get('pass')
     }),
     h('br'),
-    h('button.login', 'Login')
+    h('button.login', 'Login'),
+    h('button.loginregister', 'register')
   ]);
 }
 

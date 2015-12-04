@@ -53,7 +53,7 @@ function intent(DOM, HTTP) {
   const login$ = DOM
     .select('.login')
     .events('click')
-    .map(() => actions(Constants.LOGIN_BTN));
+          .map(() => Routes.HOME); //actions(Constants.LOGIN_BTN));
   const idChange$ = DOM
     .select('.id')
     .events('input')
@@ -69,9 +69,9 @@ function intent(DOM, HTTP) {
   
   return {
     DOM: Rx.Observable.merge(
-      login$, idChange$, passChange$
+      idChange$, passChange$
     ),
-    route: register$
+    route: login$
   };
 }
 

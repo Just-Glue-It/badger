@@ -22,7 +22,6 @@ function Spiral(p5) {
         return data[i];
       }
     }
-    console.log(time, data);
     return null;
   };
 

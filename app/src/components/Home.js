@@ -22,13 +22,16 @@ function actions(constant, data) {
 }
 
 const initialModel = Immutable.Map({
-  spiralData: Immutable.List()
+  spiralData: Immutable.List(),
+  displaySpiral: false
 });
 
 function update(model, action) {
   switch (action.action) {
   case Constants.ADD_DATA:
-    return model.update('spiralData', data => data.push(action.data));
+    return model
+      .set('displaySpiral', true)
+      .update('spiralData', data => data.push(action.data));
     //return model.set('spiralData', newData);
   default:
     console.error('Bad Constant', action);
@@ -51,8 +54,15 @@ function intent(DOM, HTTP) {
 
 function view(model) {
   console.log(model.toJS());
+  var spiral;
+  if (model.get('displaySpiral')) {
+    spiral = Spiral.view(model.get('spiralData'));
+  } else {
+    spiral = h('div');
+  }
   return h('div', [
-    Spiral.view(model.get('spiralData')),
+    h('div#spiralcanvas'),
+    spiral,
     h('br'),
     h('br'),
     h('button.addData', 'new data'),

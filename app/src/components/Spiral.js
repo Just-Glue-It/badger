@@ -6,17 +6,9 @@ import p5 from 'p5';
 import Routes from '../routes';
 import SpiralDriver from './SpiralDriver';
 
-
-function viewSpiral(data) {
-  SpiralDriver('spiralcanvas', data.toJS());
-  return h('div#spiralcanvas');
-}
-
 function view(data) {
-  console.log(data.toJS());
-  return h('div', [
-    viewSpiral(data)
-  ]);
+  SpiralDriver('spiralcanvas', data.toJS());
+  return h('div');
 }
 
 export default {view};

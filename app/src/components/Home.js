@@ -3,12 +3,11 @@ import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
 import Rx from 'rx';
 import Routes from '../routes';
+import Spiral from './Spiral';
 
-const Constants = {
-  ADD_DATA: (data) => ({
-    action: Constants.ADD_DATA
-  })
-};
+const Constants = KeyMirror({
+  ADD_DATA: null
+});
 
 function actions(constant, data) {
   switch (constant) {
@@ -29,7 +28,7 @@ const initialModel = Immutable.Map({
 function update(model, action) {
   switch (action.action) {
   case Constants.ADD_DATA:
-    return model.update('spiralData', data => data.push(action.data.time));
+    return model.update('spiralData', data => data.push(action.data));
     //return model.set('spiralData', newData);
   default:
     console.error('Bad Constant', action);
@@ -40,7 +39,7 @@ function intent(DOM, HTTP) {
   const addData$ = DOM
           .select('.addData')
           .events('click')
-          .map(() => actions(Constants.ADD_DATA, {data: {time: new Date().getTime(), color: 123}}));
+          .map(() => actions(Constants.ADD_DATA, {data: {time: new Date().getTime(), color: Math.random() * 255}}));
   
   return {
     DOM: Rx.Observable.merge(
@@ -53,7 +52,7 @@ function intent(DOM, HTTP) {
 function view(model) {
   console.log(model.toJS());
   return h('div', [
-    h('p', model.get('spiralData').toJS().toString()),
+    Spiral.view(model.get('spiralData')),
     h('br'),
     h('br'),
     h('button.addData', 'new data'),

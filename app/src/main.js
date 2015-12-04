@@ -117,5 +117,5 @@ function makeRouteDriver(initialRoute) {
 
 run(main, {
   DOM: makeDOMDriver('.app'),
-  route: makeRouteDriver(Routes.REGISTER)
+  route: makeRouteDriver(Routes.LOGIN)
 });

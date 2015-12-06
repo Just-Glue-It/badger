@@ -1,16 +1,17 @@
 import {run} from '@cycle/core';
 import Rx from 'rx';
 import {h, makeDOMDriver} from '@cycle/dom';
-import {makeHTTPDriver} from '@cycle/http';
+import Routes from './routes';
 import Register from './components/Register';
 import Login from './components/Login';
 import KeyMirror from 'keymirror';
 import Immutable from 'immutable';
-import routes from './routes';
+import {makeRouteDriver} from './drivers/Routes';
+
+console.log('print register main', Register);
 
 const Constants = KeyMirror({
-  LOGIN: null,
-  REGISTER: null,
+  CHILD: null,
   NO_OP: null,
   CHANGE_ROUTE: null
 });
@@ -21,7 +22,7 @@ function action(constant, data) {
     return {
       action: constant
     };
-  case Constants.REGISTER:
+  case Constants.CHILD:
     return {
       action: constant,
       childAction: data.action
@@ -31,92 +32,82 @@ function action(constant, data) {
       action: constant,
       route: data.route
     };
-  case Constants.LOGIN:
-    return {
-      action: constant,
-      childAction: data.action
-    };
   default:
     console.error('Invalid Constant', constant, data);
   }
 }
 
 const initialModel = Immutable.Map({
-  login: Login.initialModel,
-  register: Register.initialModel,
-  HTTP: Rx.Observable.merge(Login.initialModel.HTTP)
+  child: Routes.LOGIN,
+  childModel: Routes.LOGIN.initialModel
 });
 
 function update(model, action) {
-  let newModel;
+  console.log('update', action.action, action, model);
   switch(action.action) {
   case Constants.NO_OP:
-    newModel = model;
-  case Constants.REGISTER:
-    newModel = initialModel.set(
-      'register',
-      Register.update(initialModel, action.childAction)
-    );
+    return model;
+  case Constants.CHILD:
+    const updatedChild = model.get('child').update(model.get('childModel'), action.childAction);
+    return model.set('childModel', updatedChild);
   case Constants.CHANGE_ROUTE:
-    newModel = initialModel.set('route', action.route);
-  case Constants.LOGIN:
-    newModel = initialModel.set(
-      'login',
-      Login.update(initialModel, action.childAction)
-    );
+    console.log('update change route', action);
+
+    return model
+      .set('child', action.route)
+      .set('childModel', action.route.initialModel);
+
+    // return initialModel.merge({
+    //   child: action.route,
+    //   childModel: action.route.initialModel
+    // });
   default:
     console.error('Invalid Constant', action);
+    return model;
   }
-
-  newModel.set(
-    'HTTP',
-    Rx.Observable.merge(Login.initialModel.HTTP, Register.initialModel.HTTP)
-  );
 }
 
 function view(model) {
-  console.log('in main/view');                            // TODO
-  // return Register.view(model.get('register'));
-  return Login.view(model.get('login'));
+  console.log('in main/view', model);
+  const child = model.get('child');
+  const childModel = model.get('childModel');
+  console.log(child);
+  return child.view(childModel);
 }
 
-function intent(DOM, HTTP) {
-  // const routeChange$ = events
-  //         .route
-  //         .map((route) =>
-  //              action(Constants.CHANGE_ROUTE, {route: route}));
+function intent(child, DOM, route) {
+  console.log('intent', child);
+  const routeChange$ = route.map(
+    route => action(Constants.CHANGE_ROUTE, {route: route}));
 
-  const registerAction$ = Register                    // TODO
-          .intent(DOM)
-          .map((register_action) =>
-               action(Constants.REGISTER, {action: register_action}));
+  const childIntent = child.intent(DOM, route);
+  const childAction$ = childIntent.DOM.map(
+    childAction => action(Constants.CHILD, {action: childAction}));
 
-  const loginAction$ = Login
-    .intent(DOM, HTTP)
-    .map((login_action) =>
-      action(Constants.LOGIN, {action: login_action}));
-
-  return Rx.Observable.merge(
-    registerAction$, loginAction$
-  ).startWith(action(Constants.NO_OP));
-}
-
-function main({DOM, HTTP}) {
-  const action$ = intent(DOM, HTTP);
-  const model$ = action$.scan(update, initialModel).shareReplay(1);
-  const view$ = model$.map(view);
   return {
-    DOM: view$,
-    HTTP: model$.map(m => m.HTTP)
+    DOM: Rx.Observable.merge(
+      childAction$, routeChange$
+    ).startWith(action(Constants.NO_OP)),
+    route: childIntent.route
   };
 }
 
-const drivers = {
-  DOM: makeDOMDriver('.app'),
-  HTTP: makeHTTPDriver(),
-  // events: {
-  //   route: Rx.Observable.just(routes.LOGIN)
-  // }
-};
+function main({DOM, route}) {
+  const intent$ = route.map(child => intent(child, DOM, route));
 
-run(main, drivers);
+  const model$ = intent$.map(
+    intent => intent.DOM.scan(update, initialModel).shareReplay(1)
+  ).mergeAll();
+
+  const view$ = model$.map(view);
+
+  return {
+    DOM: view$,
+    route: intent$.map(intent => intent.route).mergeAll()
+  };
+}
+
+run(main, {
+  DOM: makeDOMDriver('.app'),
+  route: makeRouteDriver(Routes.LOGIN)
+});

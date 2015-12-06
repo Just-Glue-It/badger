@@ -18,9 +18,9 @@ const initialModel = Immutable.map({
   status: ''
 });
 
+// TODO check if session ID exists - cordova localStorage
 function update(model, action) {
   switch (action.action) {
-  case Constants.USER_STATUS:  // TODO check if session ID exists
 
   default:
     console.error('Bad constant', constant, data);
@@ -37,7 +37,7 @@ function intent(DOM) {
 function view(model) {
   return h('div', [
     h('img', {attributes: {
-      src:  '...',
+      src:  '',
       height: '',
       width: ''
     }})

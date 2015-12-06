@@ -1,16 +1,15 @@
 import {h} from '@cycle/dom';
-import {makeHTTPDriver} from '@cycle/http';
 import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
 import Rx from 'rx';
+import Routes from '../routes';
 
-const BADGER_LOGIN_API = 'http://159.203.8.77/postgrest/tokens';
+const LOGIN_URL = 'http://159.203.8.77/postgrest/tokens';
 
 const Constants = KeyMirror({
   ID_CHANGED: null,
   PASS_CHANGED: null,
-  LOGIN_BTN: null,
-  GOTO_REGISTER_BTN: null
+  LOGIN_BTN: null
 });
 
 function actions(constant, data) {
@@ -29,10 +28,6 @@ function actions(constant, data) {
     return {
       action: constant
     };
-  case Constants.GOTO_REGISTER_BTN:
-    return {
-      action: constant
-    };
   default:
     console.error('Bad Constant', constant, data);
   }
@@ -40,8 +35,7 @@ function actions(constant, data) {
 
 const initialModel = Immutable.Map({
   id: '',
-  pass: '',
-  HTTP: Rx.Observable.never()
+  pass: ''
 });
 
 function update(model, action) {
@@ -51,18 +45,9 @@ function update(model, action) {
   case Constants.PASS_CHANGED:
     return model.set('pass', action.pass);
   case Constants.LOGIN_BTN:
-    return model.set('HTTP', Rx.Observable.just({
-      url: BADGER_LOGIN_API,
-      method: 'post',
-      query: {
-        id: action.id,
-        pass: action.pass
-      }
-    }));
-  case Constants.GOTO_REGISTER_BTN:
-    // TODO route to the registration screen
+    return model.merge({id: '', pass: ''});
   default:
-    console.error('Bad Constant', constant, data);
+    console.error('Bad Constant', action);
   }
 }
 
@@ -70,11 +55,7 @@ function intent(DOM, HTTP) {
   const login$ = DOM
           .select('.login')
           .events('click')
-          .map(() => actions(Constants.LOGIN_BTN));
-  const gotoRegister$ = DOM
-          .select('.goto-register')
-          .events('click')
-          .map(() => actions(Constants.GOTO_REGISTER_BTN));
+          .map(() => Routes.HOME); //actions(Constants.LOGIN_BTN));
   const idChange$ = DOM
           .select('.id')
           .events('input')
@@ -83,17 +64,17 @@ function intent(DOM, HTTP) {
           .select('.pass')
           .events('input')
           .map((ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
+  const register$ = DOM
+      	  .select('.loginregister')
+      	  .events('click')
+      	  .map(() => Routes.REGISTER);
 
-  const loginAPIResponse$ = HTTP
-          .filter(req$ => req$.request.url === BADGER_LOGIN_API)
-          .mergeAll()
-          .map(res => res.body)
-          .startWith('Sending request')
-          .map(body => localStorage.setItem('sessionID', body.token));
-
-  return Rx.Observable.merge(
-    login$, gotoRegister$, idChange$, passChange$
-  );
+  return {
+    DOM: Rx.Observable.merge(
+      idChange$, passChange$
+    ),
+    route: loginSuccess$,
+  };
 }
 
 function view(model) {
@@ -109,8 +90,7 @@ function view(model) {
     }),
     h('br'),
     h('button.login', 'Login'),
-    h('br'), h('br'),
-    h('button.goto-register', 'Register')
+    h('button.loginregister', 'register')
   ]);
 }
 

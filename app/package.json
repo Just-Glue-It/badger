@@ -36,6 +36,7 @@
     "@cycle/http": "^6.1.0",
     "immutable": "^3.7.5",
     "keymirror": "latest",
+    "p5": "^0.4.19",
     "rx": "^4.0.6"
   }
 }

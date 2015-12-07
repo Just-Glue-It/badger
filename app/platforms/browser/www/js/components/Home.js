@@ -12,9 +12,15 @@ const Constants = KeyMirror({
 function actions(constant, data) {
   switch (constant) {
   case Constants.ADD_DATA:
+    cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: 'hey, what are you doing?',
+      text: 'badger',
+      every: 'minute',
+    });
     return {
       action: constant,
-      data: data.data
+      data: data.data,
     };
   default:
     console.error('Bad Constant', constant, data);
@@ -29,6 +35,13 @@ const initialModel = Immutable.Map({
 function update(model, action) {
   switch (action.action) {
   case Constants.ADD_DATA:
+    window.cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: 'hey, what are you doing?',
+      text: 'badger',
+      every: 'minute',
+    });
+    document.write('right after notif');
     return model
       .set('displaySpiral', true)
       .update('spiralData', data => data.push(action.data));

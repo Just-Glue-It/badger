@@ -6,7 +6,7 @@ function Spiral(p5) {
   let timeOffset = 0;
   let targetTimeOffset = 0;
 
-  let memory = 7;
+  let memory = 14;
   let hw, hh, r;
   p5.setup = () => {
     p5.createCanvas(700, 410);
@@ -29,7 +29,7 @@ function Spiral(p5) {
     let speed = 1/1.0;
     let curTime = speed * (new Date().getTime() / 1000);
    // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
-    curTime = timeOffset + curTime;
+    //curTime = timeOffset + curTime;
     p5.background(255);
     let n = memory * 24 * 2; // one cell for every half hour
     let startAngle = curTime;
@@ -63,6 +63,7 @@ function Spiral(p5) {
 
 let instance;
 export default (containerName, newData) => {
+  console.log('new data', newData);
   data = newData;
   if (!instance) {
     instance = new p5(Spiral, containerName);

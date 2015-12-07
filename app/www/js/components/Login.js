@@ -49,7 +49,7 @@ function update(model, action) {
   }
 }
 
-function intent(DOM, HTTP) {
+function intent(DOM, route, persistantData) {
   const login$ = DOM
           .select('.login')
           .events('click')
@@ -71,7 +71,8 @@ function intent(DOM, HTTP) {
     DOM: Rx.Observable.merge(
       idChange$, passChange$
     ),
-    route: login$,
+    route: Rx.Observable.merge(login$, register$),
+    persistantData: Rx.Observable.never()
   };
 }
 

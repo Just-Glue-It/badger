@@ -6,11 +6,17 @@ import Routes from '../routes';
 import Spiral from './Spiral';
 
 const Constants = KeyMirror({
+  SET_DATA: null,
   ADD_DATA: null
 });
 
 function actions(constant, data) {
   switch (constant) {
+  case Constants.SET_DATA:
+    return {
+      action: constant,
+      data: data.data
+    };
   case Constants.ADD_DATA:
     return {
       action: constant,
@@ -28,32 +34,40 @@ const initialModel = Immutable.Map({
 
 function update(model, action) {
   switch (action.action) {
-  case Constants.ADD_DATA:
+  case Constants.SET_DATA:
     return model
       .set('displaySpiral', true)
-      .update('spiralData', data => data.push(action.data));
-    //return model.set('spiralData', newData);
+      .set('spiralData', action.data);
+  case Constants.ADD_DATA:
+    return model;
   default:
     console.error('Bad Constant', action);
   }
 }
 
-function intent(DOM, HTTP) {
-  const addData$ = DOM
-          .select('.addData')
-          .events('click')
-          .map(() => actions(Constants.ADD_DATA, {data: {time: new Date().getTime(), color: Math.random() * 255}}));
+function intent(DOM, HTTP, persistantData) {
+  const setData$ = persistantData
+          .map(data => actions(Constants.SET_DATA, {data: data.get('pings')}));
 
+  const addDataClick$ = DOM
+          .select('.addData')
+          .events('click');
+  
+  const newData$ = addDataClick$.withLatestFrom(persistantData)
+          .map(combined => {
+            console.log(combined);
+            return combined[1].update('pings', pings => pings.push({time: new Date().getTime(), color: Math.random() * 255}));
+          });
+  
   return {
-    DOM: Rx.Observable.merge(
-      addData$
-    ),
-    route: Rx.Observable.never()
+    DOM: setData$, 
+    route: Rx.Observable.never(),
+    persistantData: newData$
   };
 }
 
 function view(model) {
-  console.log(model.toJS());
+  console.log(JSON.stringify(model));
   var spiral;
   if (model.get('displaySpiral')) {
     spiral = Spiral.view(model.get('spiralData'));

@@ -1,19 +1,17 @@
+import Rx from 'rx';
 import {h} from '@cycle/dom';
 import Immutable from 'immutable';
 import KeyMirror from 'keymirror';
-import Rx from 'rx';
 import Routes from '../routes';
-
-const LOGIN_URL = 'http://159.203.8.77/postgrest/tokens';
 
 const Constants = KeyMirror({
   ID_CHANGED: null,
   PASS_CHANGED: null,
-  LOGIN_BTN: null
+  REGISTER_BTN: null,
 });
 
 function actions(constant, data) {
-  switch (constant) {
+  switch(constant) {
   case Constants.ID_CHANGED:
     return {
       action: constant,
@@ -22,16 +20,16 @@ function actions(constant, data) {
   case Constants.PASS_CHANGED:
     return {
       action: constant,
-      pass: data.pass
+      pass: data.id
     };
-  case Constants.LOGIN_BTN:
+  case Constants.REGISTER_BTN:
     return {
       action: constant
     };
   default:
     console.error('Bad Constant', constant, data);
   }
-}
+};
 
 const initialModel = Immutable.Map({
   id: '',
@@ -39,59 +37,54 @@ const initialModel = Immutable.Map({
 });
 
 function update(model, action) {
-  switch (action.action) {
+  switch(action.action) {
   case Constants.ID_CHANGED:
     return model.set('id', action.id);
   case Constants.PASS_CHANGED:
     return model.set('pass', action.pass);
-  case Constants.LOGIN_BTN:
+  case Constants.REGISTER_BTN:
     return model.merge({id: '', pass: ''});
   default:
     console.error('Bad Constant', action);
   }
 }
 
-function intent(DOM, HTTP) {
-  const login$ = DOM
-          .select('.login')
+function view(model) {
+  return h('div',[
+    h('input.id', {value: model.get('id')}),
+    h('input.pass', {type: 'password', value: model.get('pass')}),
+    h('button.register', 'Register'),
+    h('button.back', 'Back to Login')
+  ]);
+}
+
+function intent(DOM) {
+  const back$ = DOM
+      	  .select('.back')
+      	  .events('click')
+      	  .map( () => Routes.LOGIN );
+
+  const register$ = DOM
+          .select('.register')
           .events('click')
-          .map(() => Routes.HOME); //actions(Constants.LOGIN_BTN));
+          .map( () => actions(Constants.REGISTER_BTN) );
+
   const idChange$ = DOM
           .select('.id')
           .events('input')
-          .map((ev) => actions(Constants.ID_CHANGED, {id: ev.target.value}));
+          .map( (ev) => actions(Constants.ID_CHANGED, {id: ev.target.value}));
+
   const passChange$ = DOM
           .select('.pass')
           .events('input')
-          .map((ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
-  const register$ = DOM
-      	  .select('.loginregister')
-      	  .events('click')
-      	  .map(() => Routes.REGISTER);
-
+          .map( (ev) => actions(Constants.PASS_CHANGED, {pass: ev.target.value}));
+  console.log(Rx);
   return {
     DOM: Rx.Observable.merge(
-      idChange$, passChange$
+      register$, idChange$, passChange$
     ),
-    route: loginSuccess$,
+    route: back$
   };
-}
-
-function view(model) {
-  return h('div', [
-    h('input.id', {
-      type: 'text',
-      value: model.get('id')
-    }),
-    h('br'),
-    h('input.pass', {
-      type: 'password',
-      value: model.get('pass')
-    }),
-    h('br'),
-    h('button.login', 'Login'),
-    h('button.loginregister', 'register')
-  ]);
 }
 
 export default {intent, initialModel, update, view};

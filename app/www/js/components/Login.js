@@ -4,12 +4,6 @@ import KeyMirror from 'keymirror';
 import Rx from 'rx';
 import Routes from '../routes';
 
-const LOGIN_URL = 'http://159.203.8.77/postgrest/tokens';
-
-const loginButtonStyle = {
-  color: 'red'
-};
-
 const Constants = KeyMirror({
   ID_CHANGED: null,
   PASS_CHANGED: null,

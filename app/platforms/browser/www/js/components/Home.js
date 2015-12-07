@@ -11,6 +11,11 @@ const Constants = KeyMirror({
 
 function actions(constant, data) {
   switch (constant) {
+  case Constants.SET_DATA:
+    return {
+      action: constant,
+      data: data.data
+    };
   case Constants.ADD_DATA:
     return {
       action: constant,
@@ -28,6 +33,8 @@ const initialModel = Immutable.Map({
 
 function update(model, action) {
   switch (action.action) {
+  case Constants.SET_DATA:
+    return model.set('spiralData', action.data);
   case Constants.ADD_DATA:
     return model
       .set('displaySpiral', true)
@@ -38,7 +45,10 @@ function update(model, action) {
   }
 }
 
-function intent(DOM, HTTP) {
+function intent(DOM, HTTP, persistantData) {
+  const setData$ = persistantData
+          .map(data => actions(Constants.SET_DATA, {data: data.get('pings')}));
+  
   const addData$ = DOM
           .select('.addData')
           .events('click')
@@ -48,7 +58,8 @@ function intent(DOM, HTTP) {
     DOM: Rx.Observable.merge(
       addData$
     ),
-    route: Rx.Observable.never()
+    route: Rx.Observable.never(),
+    persistantData: Rx.Observable.never()
   };
 }
 

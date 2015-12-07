@@ -58,7 +58,7 @@ function view(model) {
   ]);
 }
 
-function intent(DOM) {
+function intent(DOM, route, persistantData) {
   const back$ = DOM
       	  .select('.back')
       	  .events('click')
@@ -83,7 +83,8 @@ function intent(DOM) {
     DOM: Rx.Observable.merge(
       register$, idChange$, passChange$
     ),
-    route: back$
+    route: back$,
+    persistantData: Rx.Observable.never()
   };
 }
 

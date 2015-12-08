@@ -17,9 +17,15 @@ function actions(constant, data) {
       data: data.data
     };
   case Constants.ADD_DATA:
+    cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: 'hey, what are you doing?',
+      text: 'badger',
+      every: 'minute',
+    });
     return {
       action: constant,
-      data: data.data
+      data: data.data,
     };
   default:
     console.error('Bad Constant', constant, data);
@@ -36,6 +42,13 @@ function update(model, action) {
   case Constants.SET_DATA:
     return model.set('spiralData', action.data);
   case Constants.ADD_DATA:
+    window.cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: 'hey, what are you doing?',
+      text: 'badger',
+      every: 'minute',
+    });
+    document.write('right after notif');
     return model
       .set('displaySpiral', true)
       .update('spiralData', data => data.push(action.data));

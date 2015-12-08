@@ -35,6 +35,13 @@ const initialModel = Immutable.Map({
 function update(model, action) {
   switch (action.action) {
   case Constants.SET_DATA:
+    document.addEventListener('deviceready', () => {
+      window.plugin.notification.local.schedule({
+        text: 'Hey, what are you doing?',
+        message: 'badger',
+        every: 1
+      });
+    });
     return model
       .set('displaySpiral', true)
       .set('spiralData', action.data);
@@ -52,15 +59,15 @@ function intent(DOM, HTTP, persistantData) {
   const addDataClick$ = DOM
           .select('.addData')
           .events('click');
-  
+
   const newData$ = addDataClick$.withLatestFrom(persistantData)
           .map(combined => {
             console.log(combined);
             return combined[1].update('pings', pings => pings.push({time: new Date().getTime(), color: Math.random() * 255}));
           });
-  
+
   return {
-    DOM: setData$, 
+    DOM: setData$,
     route: Rx.Observable.never(),
     persistantData: newData$
   };

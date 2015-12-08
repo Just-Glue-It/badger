@@ -11,7 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/Just-Glue-It/badger.git"
   },
-  "author": "davidrusu & kingscott",
+  "authors": [
+    "David Rusu <davidrusu.me@gmail.com> (http://github.com/davidrusu)",
+    "Scott King <kingsc850@gmail.com> (http://github.com/kingscott)"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Just-Glue-It/badger/issues"
@@ -27,16 +30,15 @@
     "eslint-config-airbnb": "^1.0.0",
     "eslint-loader": "^1.1.1",
     "eslint-plugin-babel": "^2.1.1",
+    "eslint-plugin-react": "^3.11.3",
     "webpack": "^1.12.4",
     "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
-    "@cycle/core": "^5.0.1",
-    "@cycle/dom": "^7.1.1",
-    "@cycle/http": "^6.1.0",
-    "immutable": "^3.7.5",
-    "keymirror": "latest",
     "p5": "^0.4.19",
-    "rx": "^4.0.6"
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4"
   }
 }

@@ -33,7 +33,7 @@ function actions(constant, data) {
 
 const initialModel = Immutable.Map({
   id: '',
-  pass: ''
+  pass: '',
 });
 
 function update(model, action) {

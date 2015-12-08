@@ -1,14 +1,16 @@
-import {h} from '@cycle/dom';
-import Immutable from 'immutable';
-import KeyMirror from 'keymirror';
-import Rx from 'rx';
+import React from 'react';
+import {render} from 'react-dom';
 import p5 from 'p5';
-import Routes from '../routes';
 import SpiralDriver from './SpiralDriver';
 
-function view(data) {
-  SpiralDriver('spiralcanvas', data.toJS());
-  return h('div');
-}
+const Spiral = React.createClass({
+  render() {
+    return (
+      <div>
+        SpiralDriver('spiralcanvas', data.toJS());
+      </div>
+    );
+  }
+});
 
-export default {view};
+export default Spiral;

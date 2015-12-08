@@ -7,6 +7,7 @@ import Login from './components/Login';
 import KeyMirror from 'keymirror';
 import Immutable from 'immutable';
 import {makeRouteDriver} from './drivers/Routes';
+import {makePersistantDataDriver} from './drivers/Persistant';
 
 console.log('print register main', Register);
 
@@ -75,39 +76,43 @@ function view(model) {
   return child.view(childModel);
 }
 
-function intent(child, DOM, route) {
+function intent(child, DOM, route, persistantData) {
   console.log('intent', child);
   const routeChange$ = route.map(
     route => action(Constants.CHANGE_ROUTE, {route: route}));
 
   const childIntent = child.intent(DOM, route);
   const childAction$ = childIntent.DOM.map(
-    childAction => action(Constants.CHILD, {action: childAction}));
+    childAction => action(Constants.CHILD, {action: childAction})
+  );
 
   return {
     DOM: Rx.Observable.merge(
       childAction$, routeChange$
     ).startWith(action(Constants.NO_OP)),
-    route: childIntent.route
+    route: childIntent.route,
+    persistantData: childIntent.persistantData
   };
 }
 
-function main({DOM, route}) {
-  const intent$ = route.map(child => intent(child, DOM, route));
+function main({DOM, route, persistantData}) {
+  const intent$ = route.map(child => intent(child, DOM, route, persistantData));
 
   const model$ = intent$.map(
     intent => intent.DOM.scan(update, initialModel).shareReplay(1)
   ).mergeAll();
 
   const view$ = model$.map(view);
-
+  
   return {
     DOM: view$,
-    route: intent$.map(intent => intent.route).mergeAll()
+    route: intent$.map(intent => intent.route).mergeAll(),
+    persistantData: intent$.map(intent => intent.persistantData).mergeAll()
   };
 }
 
 run(main, {
   DOM: makeDOMDriver('.app'),
-  route: makeRouteDriver(Routes.LOGIN)
+  route: makeRouteDriver(Routes.LOGIN),
+  persistantData: makePersistantDataDriver()
 });

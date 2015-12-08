@@ -1,3 +1,5 @@
+/*eslint-disable */
+
 import p5 from 'p5';
 
 let data = [];
@@ -6,7 +8,7 @@ function Spiral(p5) {
   let timeOffset = 0;
   let targetTimeOffset = 0;
 
-  let memory = 7;
+  let memory = 14;
   let hw, hh, r;
   p5.setup = () => {
     p5.createCanvas(700, 410);
@@ -16,7 +18,7 @@ function Spiral(p5) {
     r = p5.min(hw, hh);
   };
 
-  let getDatum = (time) => {
+  const getDatum = (time) => {
     for (let i = data.length - 1; i >= 0; i--) {
       if (data[i].time / 1000 <= time) {
         return data[i];
@@ -27,12 +29,12 @@ function Spiral(p5) {
 
   p5.draw = () => {
     let speed = 1/1.0;
-    let curTime = speed * (new Date().getTime() / 1000);
+    let currTime = speed * (new Date().getTime() / 1000);
    // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
-    curTime = timeOffset + curTime;
+    //currTime = timeOffset + currTime;
     p5.background(255);
     let n = memory * 24 * 2; // one cell for every half hour
-    let startAngle = curTime;
+    let startAngle = currTime;
     let px = r * p5.cos(startAngle);
     let py = r * p5.sin(startAngle);
     for (let i = 0; i < n; i++) {
@@ -40,7 +42,7 @@ function Spiral(p5) {
       let angle = p * memory * 2 * p5.PI;
       let x = r * p * p5.cos(startAngle + angle);
       let y = r * p * p5.sin(startAngle + angle);
-      let datum = getDatum((curTime - ((1-p) * memory)));
+      let datum = getDatum((currTime - ((1-p) * memory)));
       if (datum != null) {
         p5.fill(datum.color);
         p5.stroke(datum.color);
@@ -57,12 +59,13 @@ function Spiral(p5) {
       py = y;
     }
     p5.fill(0);
-    p5.text('current time: ' + curTime, 25, 25);
+    p5.text('current time: ' + currTime, 25, 25);
   };
 };
 
 let instance;
 export default (containerName, newData) => {
+  console.log('new data', newData);
   data = newData;
   if (!instance) {
     instance = new p5(Spiral, containerName);

@@ -6,21 +6,21 @@ import Routes from '../routes';
 import Spiral from './Spiral';
 
 const Constants = KeyMirror({
+  SET_DATA: null,
   ADD_DATA: null
 });
 
 function actions(constant, data) {
   switch (constant) {
-  case Constants.ADD_DATA:
-    cordova.plugins.notification.local.schedule({
-      id: 1,
-      title: 'hey, what are you doing?',
-      text: 'badger',
-      every: 'minute',
-    });
+  case Constants.SET_DATA:
     return {
       action: constant,
-      data: data.data,
+      data: data.data
+    };
+  case Constants.ADD_DATA:
+    return {
+      action: constant,
+      data: data.data
     };
   default:
     console.error('Bad Constant', constant, data);
@@ -34,39 +34,47 @@ const initialModel = Immutable.Map({
 
 function update(model, action) {
   switch (action.action) {
-  case Constants.ADD_DATA:
-    window.cordova.plugins.notification.local.schedule({
-      id: 1,
-      title: 'hey, what are you doing?',
-      text: 'badger',
-      every: 'minute',
+  case Constants.SET_DATA:
+    document.addEventListener('deviceready', () => {
+      window.plugin.notification.local.schedule({
+        text: 'Hey, what are you doing?',
+        message: 'badger',
+        every: 1
+      });
     });
-    document.write('right after notif');
     return model
       .set('displaySpiral', true)
-      .update('spiralData', data => data.push(action.data));
-    //return model.set('spiralData', newData);
+      .set('spiralData', action.data);
+  case Constants.ADD_DATA:
+    return model;
   default:
     console.error('Bad Constant', action);
   }
 }
 
-function intent(DOM, HTTP) {
-  const addData$ = DOM
+function intent(DOM, HTTP, persistantData) {
+  const setData$ = persistantData
+          .map(data => actions(Constants.SET_DATA, {data: data.get('pings')}));
+
+  const addDataClick$ = DOM
           .select('.addData')
-          .events('click')
-          .map(() => actions(Constants.ADD_DATA, {data: {time: new Date().getTime(), color: Math.random() * 255}}));
+          .events('click');
+
+  const newData$ = addDataClick$.withLatestFrom(persistantData)
+          .map(combined => {
+            console.log(combined);
+            return combined[1].update('pings', pings => pings.push({time: new Date().getTime(), color: Math.random() * 255}));
+          });
 
   return {
-    DOM: Rx.Observable.merge(
-      addData$
-    ),
-    route: Rx.Observable.never()
+    DOM: setData$,
+    route: Rx.Observable.never(),
+    persistantData: newData$
   };
 }
 
 function view(model) {
-  console.log(model.toJS());
+  console.log(JSON.stringify(model));
   var spiral;
   if (model.get('displaySpiral')) {
     spiral = Spiral.view(model.get('spiralData'));

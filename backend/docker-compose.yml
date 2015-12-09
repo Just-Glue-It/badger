@@ -10,7 +10,7 @@
 postgrest:
   build: ./
   ports:
-    - 8000:80
+    - 80:8000
   links:
     - pg:postgres
   environment:

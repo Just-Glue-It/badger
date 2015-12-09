@@ -7,6 +7,7 @@ import AppContainer from './AppContainer.js';
 import DummyComponent from '../components/DummyComponent/DummyComponent';
 import Spiral from '../components/Home/Spiral';
 import * as SpiralActions from '../actions/SpiralActions';
+import PingContainer from './PingContainer';
 
 class HomeContainer extends Component {
   render() {
@@ -14,7 +15,7 @@ class HomeContainer extends Component {
     return (<div>
             <Spiral data={spiral.pings} />
             <button onClick={() => {
-              spiralActions.add_ping_data('testing');
+              routeActions.setRoute(PingContainer);
             }}>Add Data</button>
     </div>);
   }

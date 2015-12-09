@@ -37,7 +37,7 @@ function P5Spiral(p5) {
     // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
     //curTime = timeOffset + curTime;
     p5.background(255);
-    let n = memory * 24 * 2; // one cell for every half hour
+    let n = memory * 24; // one cell for every half hour
     let startAngle = curTime;
     let px = r * p5.cos(startAngle);
     let py = r * p5.sin(startAngle);
@@ -47,12 +47,13 @@ function P5Spiral(p5) {
       let x = r * p * p5.cos(startAngle + angle);
       let y = r * p * p5.sin(startAngle + angle);
       let datum = getDatum((curTime - ((1-p) * memory)));
+      p5.noStroke();
       if (datum != null) {
-        p5.fill(datum.color);
-        p5.stroke(datum.color);
+        p5.fill(datum.color[0], datum.color[1], datum.color[2]);
+        //p5.stroke(datum.color[0], datum.color[1], datum.color[2]);
       } else {
         p5.fill(255);
-        p5.stroke(255);
+        //p5.stroke(255);
       }
       p5.strokeWeight(1);
       p5.triangle(hw + px, hh + py, hw + x, hh + y, hw, hh);
@@ -62,31 +63,26 @@ function P5Spiral(p5) {
       px = x;
       py = y;
     }
-    p5.fill(0);
-    p5.text('current time: ' + curTime, 25, 25);
   };
 };
-  
+
+let instance = null;
 
 export default class Spiral extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      spiral: null
-    };
+    this.state = null;
   }
   
   componentDidMount() {
     console.log('didmount');
-    if (!this.state.spiral) {
-      this.setState({spiral: new p5(P5Spiral)});
+    if (!this.state) {
+      this.state = new p5(P5Spiral, 'spiral_container');
     }
   }
   
   render() {
-    if (this.state.spiral) {
-      data = this.props.data;
-    }
+    data = this.props.data;
     return (<div id="spiral_container"></div>);
   }
 }

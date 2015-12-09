@@ -16,7 +16,8 @@ module.exports = {
       test: /\.js$/,
       loaders: ['babel'],
       exclude: /build|lib|node_modules/,
-    }],
+    },
+             { test: /\.json$/, loader: "json-loader" }],
     preLoaders: [{
       test: /\.js$/,
       loaders: ['eslint'],

@@ -2,6 +2,19 @@ import React, {PropTypes} from 'react';
 const TextField = require('material-ui/lib/text-field');
 const Button = require('material-ui/lib/raised-button');
 
+const divStyles = {
+  display: 'inlineBlock',
+  textAlign: 'center'
+};
+
+const headerStyles = {
+  fontFamily: 'Montserrat'
+};
+
+const fontStyles = {
+  fontFamily: 'Roboto',
+};
+
 const Register = React.createClass({
   getInitialState() {
     return {
@@ -25,12 +38,12 @@ const Register = React.createClass({
   render() {
     const {register, store, registerActions} = this.props;
     return (
-      <div>
-      <h1> Register for badger! </h1>
-      <TextField hintText='Username' value={this.state.username} onChange={this.usernameChange}/><br /><br />
-      <TextField type='password' hintText='Password' value={this.state.password} onChange={this.passwordChange}/><br /><br /><br />
-        <Button label='Register' onClick={() => registerActions.register(store.dispatch, this.state.username, this.state.password)}/>&nbsp;
-        <Button label='Back To Login' onClick={() => registerActions.toLogin(store.dispatch)}/>
+      <div style={divStyles}>
+        <h1 style={headerStyles}> Register for badger! </h1>
+        <TextField hintText='Username' value={this.state.username} onChange={this.usernameChange} style={fontStyles} underlineFocusStyle={{borderColor: '#00c853'}}/><br /><br />
+        <TextField type='password' hintText='Password' value={this.state.password} onChange={this.passwordChange} style={fontStyles} underlineFocusStyle={{borderColor: '#00c853'}}/><br /><br /><br />
+        <Button label='Register' onClick={() => registerActions.register(store.dispatch, this.state.username, this.state.password)} backgroundColor='#00c853' style={fontStyles}/>&nbsp;
+        <Button label='Back To Login' onClick={() => registerActions.toLogin(store.dispatch)} backgroundColor='#00c853' style={fontStyles}/>
       </div>
     );
   }

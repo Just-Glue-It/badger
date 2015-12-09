@@ -14,7 +14,7 @@ class Router extends Component {
   render() {
     store.subscribe(this.forceUpdate.bind(this));
     return (<Provider store={store}>
-      {React.createElement(store.getState().route.get('route'))}
+            {React.createElement(store.getState().route.get('route'), {store: store})}
     </Provider>);
   }
 }

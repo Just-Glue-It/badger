@@ -5,15 +5,18 @@ import * as DummyActions from '../actions/DummyActions';
 import * as RouteActions from '../actions/RouteActions';
 import AppContainer from './AppContainer.js';
 import DummyComponent from '../components/DummyComponent/DummyComponent';
+import Spiral from '../components/Home/Spiral';
+import * as SpiralActions from '../actions/SpiralActions';
+import PingContainer from './PingContainer';
 
 class HomeContainer extends Component {
   render() {
-    const {home, homeActions, routeActions} = this.props;
+    const {spiral, spiralActions, routeActions, store} = this.props;
     return (<div>
+            <Spiral data={spiral.pings} />
             <button onClick={() => {
-              console.log('clicked');
-              routeActions.setRoute(AppContainer);
-            }}>Dummy</button>
+              routeActions.setRoute(PingContainer);
+            }}>Add Data</button>
     </div>);
   }
 }
@@ -21,21 +24,24 @@ class HomeContainer extends Component {
 function mapState(state) {
   console.log(state);
   return {
-    dummy: state.dummy.toJS(),
-    route: state.route.toJS()
+    route: state.route.toJS(),
+    spiral: state.spiral.toJS()
   };
 }
 
 function mapDispatch(dispatch) {
   return {
-    dummyActions: bindActionCreators(DummyActions, dispatch),
-    routeActions: bindActionCreators(RouteActions, dispatch)
+    routeActions: bindActionCreators(RouteActions, dispatch),
+    spiralActions: bindActionCreators(SpiralActions, dispatch)
   };
 }
 
 HomeContainer.propTypes = {
-  dummyActions: PropTypes.object,
-  dummy: PropTypes.object
+  store: PropTypes.object,
+  routeActions: PropTypes.object,
+  route: PropTypes.object,
+  spiralActions: PropTypes.object,
+  spiral: PropTypes.object
 };
 
 export default connect(mapState, mapDispatch)(HomeContainer);

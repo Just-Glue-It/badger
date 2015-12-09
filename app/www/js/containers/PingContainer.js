@@ -11,7 +11,7 @@ import HomeContainer from './HomeContainer';
 import Tag from '../components/Tag';
 import {List, Set} from 'immutable';
 import mui from 'material-ui';
-
+const RaisedButton = mui.RaisedButton;
 const TextField = mui.TextField;
 
 class PingContainer extends Component {
@@ -41,19 +41,22 @@ class PingContainer extends Component {
         <p> {this.state.pingTime.getTime()} </p>
         <span>
         <TextField hintText="New Tag" value={this.state.newTag} onChange={(v) => this.setState({newTag: v.target.value})} />
-        <button onClick={() => {
+        <RaisedButton label={'Add Tag'} onClick={() => {
           if (this.state.newTag && !spiral.tags.find((t) => t.label === this.state.newTag)) {
             spiralActions.add_tag(this.state.newTag);
           }
-        }}> Add Tag </button>
+        }} />
         </span>
         <div>
         {spiral.tags.map(makeTag)}
       </div>
-        <button onClick={() => {
+        <RaisedButton
+      label={'Create Data Point'}
+      primary={true}
+      style={{float: 'right'}}  onClick={() => {
           spiralActions.add_ping_data(this.state.selected.toList().toJS());
           routeActions.setRoute(HomeContainer);
-        }}>Add Data</button>
+        }} />
         </div>);
   }
 }

@@ -26,7 +26,8 @@ if [ -e code ]; then
     sudo rm -rf code
 fi
 
-git clone https://github.com/Just-Glue-It/STL.git code
+git clone https://github.com/Just-Glue-It/badger.git code
+
 
 cd 'code/backend'
 docker-compose build

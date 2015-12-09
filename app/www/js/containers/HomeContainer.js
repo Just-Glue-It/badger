@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as DummyActions from '../actions/DummyActions';
 import * as RouteActions from '../actions/RouteActions';
+import HomeActions from '../actions/HomeActions';
 import AppContainer from './AppContainer.js';
 import DummyComponent from '../components/DummyComponent/DummyComponent';
 import Spiral from '../components/Home/Spiral';
@@ -58,6 +59,7 @@ function aggregateTagData(pings, tags) {
 function mapState(state) {
   console.log(state);
   return {
+    home: state.home.toJS(),
     route: state.route.toJS(),
     spiral: state.spiral.toJS()
   };
@@ -65,12 +67,15 @@ function mapState(state) {
 
 function mapDispatch(dispatch) {
   return {
+    homeActions: bindActionCreators(HomeActions, dispatch),
     routeActions: bindActionCreators(RouteActions, dispatch),
     spiralActions: bindActionCreators(SpiralActions, dispatch)
   };
 }
 
 HomeContainer.propTypes = {
+  homeActions: PropTypes.object,
+  home: PropTypes.object,
   store: PropTypes.object,
   routeActions: PropTypes.object,
   route: PropTypes.object,

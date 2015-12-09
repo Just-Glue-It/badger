@@ -5,8 +5,8 @@ const Button = require('material-ui/lib/raised-button');
 const Login = React.createClass({
   getInitialState() {
     return {
-      username: '',
-      password: '',
+      username: 'kingscott',
+      password: 'password123',
     };
   },
 
@@ -23,14 +23,14 @@ const Login = React.createClass({
   },
 
   render() {
-    const {loginActions} = this.props;
+    const {login, store, loginActions} = this.props;
     return (
       <div>
           <h1> badger </h1>
           <TextField hintText='Username' value={this.state.username} onChange={this.usernameChange}/><br /><br />
           <TextField type='password' hintText='Password' value={this.state.password} onChange={this.passwordChange}/><br /><br /><br />
-          <Button label='Login' onClick={loginActions.login.bind(this)}/>&nbsp;
-          <Button label='Register' />
+          <Button label='Login' onClick={() => loginActions.login(store.dispatch, this.state.username, this.state.password)}/>&nbsp;
+          <Button label='Register' onClick={() => loginActions.toRegister(store.dispatch)}/>
       </div>
     );
   }
@@ -38,7 +38,7 @@ const Login = React.createClass({
 
 Login.propTypes = {
   loginActions: PropTypes.object,
-  login: PropTypes.object
+  login: PropTypes.object,
 };
 
 export default Login;

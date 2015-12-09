@@ -31,11 +31,18 @@ function P5Spiral(p5) {
     return null;
   };
 
+  p5.mousePressed = function() {
+    const dx = hw - p5.mouseX;
+    const dy = hh - p5.mouseY;
+    const dist = p5.min(r, p5.sqrt(dx*dx + dy * dy)) + (r / memory) / 2;
+    targetTimeOffset = p5.min(0, targetTimeOffset + (dist / r) * memory - memory / 2);
+  };
   p5.draw = () => {
     let speed = 1/1.0;
     let curTime = speed * (new Date().getTime() / timeFactor);
     // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
-    //curTime = timeOffset + curTime;
+    timeOffset += (targetTimeOffset - timeOffset) * 0.1;
+    curTime = curTime + timeOffset;
     p5.background(255);
     let n = memory * 24; // one cell for every half hour
     let startAngle = curTime;

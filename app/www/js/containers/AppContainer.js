@@ -1,12 +1,12 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import * as DummyActions from '../actions/DummyActions';
 import DummyComponent from '../components/DummyComponent/DummyComponent';
 
 class AppContainer extends Component {
   render() {
-    const { dummy, dummyActions } = this.props;
+    const {dummy, dummyActions} = this.props;
     return (<div>
       <DummyComponent dummy={dummy} dummyActions={dummyActions}/>
     </div>);

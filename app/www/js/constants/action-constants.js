@@ -1,2 +1,6 @@
 export const DUMMY_INCREMENT_ACTION = 'DUMMY_INCREMENT_ACTION';
+<<<<<<< HEAD
 export const LOGIN_CLICK = 'LOGIN_CLICK';
+=======
+export const CHANGE_ROUTE_ACTION = 'CHANGE_ROUTE_ACTION';
+>>>>>>> b5250bdf4e7b5b1568d0d98fb601724daa7d9e10

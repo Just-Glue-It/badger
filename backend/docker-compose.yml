@@ -1,11 +1,11 @@
-//nginx:
-//  build: ./nginx
-//  ports:
-//    - 80:80
-//  volumes:
-//    - /www/static
-//  links:
-//    - postgrest:postgrest
+# nginx:
+#   build: ./nginx
+#   ports:
+#     - 80:80
+#   volumes:
+#     - /www/static
+#   links:
+#     - postgrest:postgrest
 
 postgrest:
   build: ./

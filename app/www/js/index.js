@@ -1,8 +1,14 @@
 import React from 'react';
-import {render} from 'react-dom';
-import App from './containers/App';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import configureStore from './store';
+import AppContainer from './containers/AppContainer';
+import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-render(
-  <App />,
-  document.getElementById('app')
+const store = configureStore();
+ReactDOM.render(
+  <Provider store={store}>
+    <AppContainer/>
+  </Provider>,
+  document.getElementById('root')
 );

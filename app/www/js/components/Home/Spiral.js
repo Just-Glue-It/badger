@@ -10,7 +10,7 @@ let data = [];
 function P5Spiral(p5) {
   let timeOffset= 0;
   let targetTimeOffset = 0;
-
+  let timeFactor = 60000;
   let memory = 7;
   let hw, hh, r;
   p5.setup = () => {
@@ -24,7 +24,7 @@ function P5Spiral(p5) {
 
   let getDatum = (time) => {
     for (let i = data.length - 1; i >= 0; i--) {
-      if (data[i].time / 1000 <= time) {
+      if (data[i].time / timeFactor <= time) {
         return data[i];
       }
     }
@@ -33,7 +33,7 @@ function P5Spiral(p5) {
 
   p5.draw = () => {
     let speed = 1/1.0;
-    let curTime = speed * (new Date().getTime() / 1000);
+    let curTime = speed * (new Date().getTime() / timeFactor);
     // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
     //curTime = timeOffset + curTime;
     p5.background(255);

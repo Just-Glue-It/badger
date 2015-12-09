@@ -5,8 +5,8 @@ const Button = require('material-ui/lib/raised-button');
 const Login = React.createClass({
   getInitialState() {
     return {
-      username: 'kingscott',
-      password: 'password123',
+      username: '',
+      password: '',
     };
   },
 

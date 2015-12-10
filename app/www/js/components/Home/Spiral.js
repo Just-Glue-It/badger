@@ -10,7 +10,7 @@ let data = [];
 function P5Spiral(p5) {
   let timeOffset= 0;
   let targetTimeOffset = 0;
-  let timeFactor = 60000;
+  let timeFactor = 60000 * 60 * 24;
   let memory = 7;
   let hw, hh, r;
   p5.setup = () => {
@@ -44,7 +44,7 @@ function P5Spiral(p5) {
     timeOffset += (targetTimeOffset - timeOffset) * 0.1;
     curTime = curTime + timeOffset;
     p5.background(255);
-    let n = memory * 24; // one cell for every half hour
+    let n = memory * 24 * 4; // one cell for every 1/4 hour
     let startAngle = curTime;
     let px = r * p5.cos(startAngle);
     let py = r * p5.sin(startAngle);

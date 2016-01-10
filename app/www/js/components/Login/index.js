@@ -44,6 +44,7 @@ const Login = React.createClass({
           <TextField type='password' hintText='Password' value={this.state.password} onChange={this.passwordChange} style={fontStyles} underlineFocusStyle={{borderColor: '#00c853'}}/><br /><br /><br />
           <Button label='Login' onClick={() => loginActions.login(store.dispatch, this.state.username, this.state.password)} backgroundColor='#00c853' style={fontStyles}/>&nbsp;
           <Button label='Register' onClick={() => loginActions.toRegister(store.dispatch)} backgroundColor='#00c853' style={fontStyles}/>
+	<div style={{'display': login.loginAttemptFailed ? 'block' : 'none', 'color': 'red'}}> User with that name already exists</div>
       </div>
     );
   }

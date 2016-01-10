@@ -49,9 +49,9 @@ function aggregateTagData(pings, tags) {
   }
   console.log(total);
   if (total > 0) {
-  for (let i = 0; i < tags.length; i++) {
-    newTags[i][1] /= total;
-  }
+    for (let i = 0; i < tags.length; i++) {
+      newTags[i][1] /= total;
+    }
   }
   return newTags;
 }

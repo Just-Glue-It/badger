@@ -1,3 +1,9 @@
+Node version: v4.0.0
+
+Cordova version: 5.3.3
+
+Config.xml file: 
+
 <?xml version='1.0' encoding='utf-8'?>
 <!--
  Licensed to the Apache Software Foundation (ASF) under one
@@ -44,3 +50,13 @@
         <allow-intent href="itms-apps:*" />
     </platform>
 </widget>
+
+
+Plugins: 
+
+cordova-plugin-device,cordova-plugin-whitelist,de.appplant.cordova.plugin.local-notification
+
+Error retrieving Android platform information: Error: android: Command failed with exit code ENOENT
+
+
+

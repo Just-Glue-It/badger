@@ -10,8 +10,8 @@ let data = [];
 function P5Spiral(p5) {
   let timeOffset= 0;
   let targetTimeOffset = 0;
-  let timeFactor = 60000 * 60 * 24;
-  let memory = 7;
+  let timeFactor = 60000 * 60;
+  let memory = 5;
   let hw, hh, r;
   p5.setup = () => {
     const dim = p5.min(p5.windowWidth, p5.windowHeight);
@@ -42,7 +42,7 @@ function P5Spiral(p5) {
     let curTime = speed * (new Date().getTime() / timeFactor);
     // timeOffset += (-(memory * p5.mouseY) / p5.height - timeOffset) * 0.1;
     timeOffset += (targetTimeOffset - timeOffset) * 0.1;
-    curTime = curTime + timeOffset;
+    curTime = curTime + timeOffset +   (1/10) / memory;
     p5.background(255);
     let n = memory * 24 * 4; // one cell for every 1/4 hour
     let startAngle = curTime;
@@ -50,7 +50,7 @@ function P5Spiral(p5) {
     let py = r * p5.sin(startAngle);
     for (let i = 0; i < n; i++) {
       let p = 1 - i / n;
-      let angle = p * memory * 2 * p5.PI;
+      let angle = p * memory * 2 *  p5.PI;
       let x = r * p * p5.cos(startAngle + angle);
       let y = r * p * p5.sin(startAngle + angle);
       let datum = getDatum((curTime - ((1-p) * memory)));
@@ -65,7 +65,7 @@ function P5Spiral(p5) {
       p5.strokeWeight(1);
       p5.triangle(hw + px, hh + py, hw + x, hh + y, hw, hh);
       p5.stroke(255);
-      p5.strokeWeight(5);
+      p5.strokeWeight(2);
       p5.line(hw + px, hh + py, hw + x, hh + y);
       px = x;
       py = y;

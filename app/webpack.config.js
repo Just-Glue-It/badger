@@ -18,18 +18,11 @@ module.exports = {
       exclude: /build|lib|node_modules/,
     },
              { test: /\.json$/, loader: "json-loader" }],
-    preLoaders: [{
-      test: /\.js$/,
-      loaders: ['eslint'],
-      exclude: /build|lib|node_modules/
-    }]
+    preLoaders: []
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
-  ],
-  eslint: {
-    configFile: '.eslintrc'
-  },
+  ]
 };

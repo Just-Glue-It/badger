@@ -38,7 +38,6 @@ class PingContainer extends Component {
     const {spiral, spiralActions, route, routeActions} = this.props;
     return (
         <div>
-        <p> {this.state.pingTime.getTime()} </p>
         <span>
         <TextField hintText="New Tag" value={this.state.newTag} onChange={(v) => this.setState({newTag: v.target.value})} />
         <RaisedButton label={'Add Tag'} onClick={() => {
@@ -48,15 +47,15 @@ class PingContainer extends Component {
         }} />
         </span>
         <div>
-        {spiral.tags.map(makeTag)}
+      {spiral.tags.map(makeTag)}
       </div>
         <RaisedButton
       label={'Create Data Point'}
       primary={true}
       style={{float: 'right'}}  onClick={() => {
-          spiralActions.add_ping_data(this.state.selected.toList().toJS());
-          routeActions.setRoute(HomeContainer);
-        }} />
+        spiralActions.add_ping_data(this.state.selected.toList().toJS());
+        routeActions.setRoute(HomeContainer);
+      }} />
         </div>);
   }
 }

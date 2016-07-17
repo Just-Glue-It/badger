@@ -23,7 +23,7 @@ and navigate to `localhost:2020/www/index.html`. If you want to run it outside t
 
 and navigate to `file:///{$PATH}/badger/app/www/index.html` in your browser; `$PATH` is where you cloned the project.
 
-But you can just go [here](badger.js.org).
+But you can just go [here](http://badger.js.org).
 
 ### cordova
 
